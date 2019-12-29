@@ -1,67 +1,89 @@
 // The package provide double linked list data type
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // Item define the element from List
 type Item struct {
-	Prev  *Item
-	Next  *Item
-	Value interface{}
+	prev       *Item
+	next       *Item
+	value      interface{}
+	parentList *List
+}
+
+func (i Item) Prev() Item {
+	return *i.prev
+}
+func (i Item) Next() Item {
+	return *i.next
+}
+func (i Item) Value() interface{} {
+	return i.value
 }
 
 // List define double linked list realization
 type List struct {
-	Len   int
-	First *Item
-	Last  *Item
+	len   int
+	first *Item
+	last  *Item
+}
+
+func (l List) Len() int {
+	return l.len
+}
+func (l List) First() Item {
+	return *l.first
+}
+func (l List) Last() Item {
+	return *l.last
 }
 
 // PushFront method push an element to the front of the lust
 func (l *List) PushFront(v interface{}) {
-	l.Len++
-	oldFirst := l.First
-	l.First = new(Item)
-	l.First.Next = oldFirst
-	if oldFirst != nil {
-		oldFirst.Prev = l.First
+	l.len++
+	l.first = &Item{next: l.first, value: v, parentList: l}
+	if l.first.next != nil {
+		l.first.next.prev = l.first
 	}
-	if l.Last == nil {
-		l.Last = l.First
+	if l.last == nil {
+		l.last = l.first
 	}
-	l.First.Value = v
 }
 
 // PushBack method push an element to the back of the lust
 func (l *List) PushBack(v interface{}) {
-	l.Len++
-	oldLast := l.Last
-	l.Last = new(Item)
-	l.Last.Prev = oldLast
-	if oldLast != nil {
-		oldLast.Next = l.Last
+	l.len++
+	l.last = &Item{value: v, prev: l.last, parentList: l}
+	if l.last.prev != nil {
+		l.last.prev.next = l.last
 	}
-	if l.First == nil {
-		l.First = l.Last
+	if l.first == nil {
+		l.first = l.last
 	}
-	l.Last.Value = v
 }
 
 // RemoveItem method remove an element from list
-func (l *List) RemoveItem(i Item) {
-	next := i.Next
-	prev := i.Prev
+func (l *List) RemoveItem(i Item) error {
+	if l != i.parentList {
+		return errors.New("Can't remove itemv from another list")
+	}
+	next := i.next
+	prev := i.prev
 	if next != nil {
-		next.Prev = prev
+		next.prev = prev
 	} else {
-		l.Last = prev
+		l.last = prev
 	}
 	if prev != nil {
-		prev.Next = next
+		prev.next = next
 	} else {
-		l.First = next
+		l.first = next
 	}
-	l.Len--
+	l.len--
+	return nil
 }
 func main() {
 	var myList List
@@ -69,10 +91,10 @@ func main() {
 	myList.PushFront(12)
 	myList.PushBack(13)
 	fmt.Println(myList)
-	fmt.Println(myList.First.Value)
-	fmt.Println(myList.Last.Value)
-	myList.RemoveItem(*myList.First)
-	myList.RemoveItem(*myList.First)
+	fmt.Println(myList.first.value)
+	fmt.Println(myList.last.value)
+	myList.RemoveItem(*myList.first)
+	myList.RemoveItem(*myList.first)
 	fmt.Println(myList)
-	fmt.Println(myList.First.Value)
+	fmt.Println(myList.first.value)
 }
