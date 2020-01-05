@@ -82,3 +82,19 @@ func TestRunFailed(t *testing.T) {
 	require.Equal(t, 2, fail)
 	require.Error(t, err)
 }
+
+func TestRunBigN(t *testing.T) {
+	test := []func() error{successfulTaskSlow, failedTaskSlow, successfulTaskSlow, successfulTaskSlow, failedTask, successfulTaskSlow}
+	suc, fail, err := run(test, 8, 2)
+	require.Equal(t, 4, suc)
+	require.Equal(t, 2, fail)
+	require.Error(t, err)
+}
+
+func TestRunBigN2(t *testing.T) {
+	test := []func() error{successfulTaskSlow}
+	suc, fail, err := run(test, 8, 2)
+	require.Equal(t, 1, suc)
+	require.Equal(t, 0, fail)
+	require.Equal(t, nil, err)
+}
