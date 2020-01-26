@@ -77,6 +77,5 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(exitCode)
 	os.Exit(exitCode)
 }
