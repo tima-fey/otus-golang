@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 func ReadDir(dir string) (map[string]string, error) {
@@ -50,7 +51,9 @@ func RunCmd(cmd []string, env map[string]string) int {
 	err := commandExec.Run()
 	if err != nil {
 		if exitError, ok := err.(*exec.ExitError); ok {
-			return exitError.ExitCode()
+			if status, ok := exitError.Sys().(syscall.WaitStatus); ok {
+				return status.ExitStatus()
+			}
 		}
 	}
 	return 0
