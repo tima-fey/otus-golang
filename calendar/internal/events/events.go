@@ -9,10 +9,10 @@ func (e *ErrDateBusy) Error() string {
 	return "Date is busy"
 }
 
-type ErrNotSuchId struct {
+type ErrNotSuchID struct {
 }
 
-func (e *ErrNotSuchId) Error() string {
+func (e *ErrNotSuchID) Error() string {
 	return "There is no such id"
 }
 

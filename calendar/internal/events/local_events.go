@@ -4,36 +4,36 @@ import "time"
 
 type LocalStorage struct {
 	Events map[int]Event
-	nextId int
+	nextID int
 }
 
 func (les *LocalStorage) AddEvent(e Event) error {
 	if !les.IsFree(e.startDate, e.endDate) {
 		return &ErrDateBusy{}
 	}
-	les.Events[les.nextId] = e
-	les.nextId++
+	les.Events[les.nextID] = e
+	les.nextID++
 	return nil
 }
-func (les *LocalStorage) RemoveEvent(eventId int) error {
-	if _, ok := les.Events[eventId]; ok {
-		delete(les.Events, eventId)
+func (les *LocalStorage) RemoveEvent(eventID int) error {
+	if _, ok := les.Events[eventID]; ok {
+		delete(les.Events, eventID)
 		return nil
 	}
-	return &ErrNotSuchId{}
+	return &ErrNotSuchID{}
 }
-func (les *LocalStorage) ReplaceEvent(eventId int, e Event) error {
-	tempEvent, ok := les.Events[eventId]
+func (les *LocalStorage) ReplaceEvent(eventID int, e Event) error {
+	tempEvent, ok := les.Events[eventID]
 	if ok {
-		delete(les.Events, eventId)
+		delete(les.Events, eventID)
 	} else {
-		return &ErrNotSuchId{}
+		return &ErrNotSuchID{}
 	}
 	if les.IsFree(e.startDate, e.endDate) {
-		les.Events[eventId] = e
+		les.Events[eventID] = e
 		return nil
 	}
-	les.Events[eventId] = tempEvent
+	les.Events[eventID] = tempEvent
 	return &ErrDateBusy{}
 }
 func (les *LocalStorage) IsFree(timeStart, timeEnd time.Time) bool {

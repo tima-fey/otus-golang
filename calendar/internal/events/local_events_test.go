@@ -9,40 +9,39 @@ import (
 
 func TestAddEvent(t *testing.T) {
 	storage := new(LocalStorage)
-	storage.nextId = 0
+	storage.nextID = 0
 	storage.Events = make(map[int]Event)
 	startTime := time.Date(2009, time.November, 10, 10, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	testEvent := Event{name: "test_name", startDate: startTime, endDate: endTime}
 	storage.AddEvent(testEvent)
-	require.Equal(t, 1, storage.nextId)
+	require.Equal(t, 1, storage.nextID)
 	require.Equal(t, testEvent, storage.Events[0])
 	startTime2 := time.Date(2009, time.November, 10, 14, 30, 0, 0, time.UTC)
 	endTime2 := time.Date(2009, time.November, 10, 15, 30, 0, 0, time.UTC)
 	testEvent2 := Event{name: "test_name", startDate: startTime2, endDate: endTime2}
 	err := storage.AddEvent(testEvent2)
 	require.Equal(t, &ErrDateBusy{}, err)
-
 }
 
 func TestRemoveEvent(t *testing.T) {
 	storage := new(LocalStorage)
-	storage.nextId = 0
+	storage.nextID = 0
 	storage.Events = make(map[int]Event)
 	startTime := time.Date(2009, time.November, 10, 22, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	testEvent := Event{name: "test_name", startDate: startTime, endDate: endTime}
 	storage.AddEvent(testEvent)
 	storage.RemoveEvent(0)
-	require.Equal(t, 1, storage.nextId)
+	require.Equal(t, 1, storage.nextID)
 	require.Equal(t, 0, len(storage.Events))
 	err := storage.RemoveEvent(0)
-	require.Equal(t, &ErrNotSuchId{}, err)
+	require.Equal(t, &ErrNotSuchID{}, err)
 }
 
 func TestReplaceEvent(t *testing.T) {
 	storage := new(LocalStorage)
-	storage.nextId = 0
+	storage.nextID = 0
 	storage.Events = make(map[int]Event)
 	startTime := time.Date(2009, time.November, 10, 12, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
@@ -50,10 +49,10 @@ func TestReplaceEvent(t *testing.T) {
 	storage.AddEvent(testEvent)
 	testEvent2 := Event{name: "test_name2", startDate: startTime, endDate: endTime}
 	storage.ReplaceEvent(0, testEvent2)
-	require.Equal(t, 1, storage.nextId)
+	require.Equal(t, 1, storage.nextID)
 	require.Equal(t, testEvent2, storage.Events[0])
 	err := storage.ReplaceEvent(1, testEvent2)
-	require.Equal(t, &ErrNotSuchId{}, err)
+	require.Equal(t, &ErrNotSuchID{}, err)
 	startTime3 := time.Date(2009, time.November, 11, 12, 0, 0, 0, time.UTC)
 	endTime3 := time.Date(2009, time.November, 11, 23, 0, 0, 0, time.UTC)
 	testEvent3 := Event{name: "test_name3", startDate: startTime3, endDate: endTime3}
@@ -68,7 +67,7 @@ func TestReplaceEvent(t *testing.T) {
 }
 func TestIsFree(t *testing.T) {
 	storage := new(LocalStorage)
-	storage.nextId = 0
+	storage.nextID = 0
 	storage.Events = make(map[int]Event)
 	startTime := time.Date(2009, time.November, 10, 12, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
@@ -97,7 +96,7 @@ func TestIsFree(t *testing.T) {
 }
 func TestEventList(t *testing.T) {
 	storage := new(LocalStorage)
-	storage.nextId = 0
+	storage.nextID = 0
 	storage.Events = make(map[int]Event)
 	startTime := time.Date(2009, time.November, 10, 12, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
