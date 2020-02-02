@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"strings"
 )
 
 func ReadDir(dir string) (map[string]string, error) {
@@ -38,29 +37,22 @@ func ReadDir(dir string) (map[string]string, error) {
 	return answer, nil
 }
 func RunCmd(cmd []string, env map[string]string) int {
-	envsList := os.Environ()
 	for key, value := range env {
 		if value == "" {
-			for id, element := range envsList {
-				if strings.Split(element, "=")[0] == key {
-					envsList = append(envsList[:id], envsList[id+1:]...)
-				}
-
-			}
+			os.Unsetenv(key)
 		} else {
-			envsList = append(envsList, fmt.Sprintf("%s=%s", key, value))
+			os.Setenv(key, value)
 		}
 	}
 	commandExec := exec.Command(cmd[0], cmd[1:]...)
-	commandExec.Env = envsList
-	out, err := commandExec.CombinedOutput()
+	commandExec.Stdout = os.Stdout
+	commandExec.Stderr = os.Stderr
+	err := commandExec.Run()
 	if err != nil {
-		fmt.Println(err)
 		if exitError, ok := err.(*exec.ExitError); ok {
 			return exitError.ExitCode()
 		}
 	}
-	fmt.Println(string(out))
 	return 0
 }
 
@@ -73,6 +65,10 @@ func envdir(dir string, cmd []string) (int, error) {
 	return exitCode, nil
 }
 func main() {
+	if len(os.Args) < 3 {
+		fmt.Println("Error. Specify env dir and command to execute")
+		os.Exit(1)
+	}
 	exitCode, err := envdir(os.Args[1], os.Args[2:])
 	if err != nil {
 		fmt.Println(err)
