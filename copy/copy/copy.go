@@ -1,9 +1,8 @@
-package main
+package copy
 
 import (
-	"flag"
-	"fmt"
 	"io"
+	"log"
 	"os"
 
 	"github.com/cheggaaa/pb/v3"
@@ -26,7 +25,8 @@ func copyChank(source io.Reader, destination io.Writer, chunkSize int) (bool, er
 	}
 	_, err := destination.Write(buf[:localOffset])
 	if err != nil {
-		fmt.Println("writing error")
+		log.Println("writing error")
+		return false, err
 	}
 	return isEndfile, nil
 }
@@ -90,18 +90,20 @@ func CopyFile(source, destination *os.File, offset, limit int) error {
 	return nil
 }
 
-func Copy(offset, limit int, sourceName, destinationName string, isCustom bool) {
+func Copy(offset, limit int, sourceName, destinationName string, isCustom bool) error {
 	var sourceD *os.File
 	sourceD, err := os.Open(sourceName)
 	if err != nil {
-		fmt.Println("error")
+		log.Println("Error: specify source by -source")
+		return err
 	}
 	defer sourceD.Close()
 
 	var destinationD *os.File
 	destinationD, err = os.Create(destinationName)
 	if err != nil {
-		fmt.Println("error")
+		log.Println("Error: specify destination by -destination")
+		return err
 	}
 	defer destinationD.Close()
 	if isCustom {
@@ -110,21 +112,7 @@ func Copy(offset, limit int, sourceName, destinationName string, isCustom bool) 
 		err = CopyFile(sourceD, destinationD, offset, limit)
 	}
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
-}
-
-func main() {
-	var offset int
-	var sourceName string
-	var destinationName string
-	var limit int
-	var isCustom bool
-	flag.IntVar(&offset, "offset", 0, "offset in input file")
-	flag.StringVar(&sourceName, "source", "", "osource file")
-	flag.StringVar(&destinationName, "destination", "", "destination file")
-	flag.IntVar(&limit, "limit", 0, "limit of copy")
-	flag.BoolVar(&isCustom, "custom", false, "use custom copy func")
-	flag.Parse()
-	Copy(offset, limit, sourceName, destinationName, isCustom)
+	return nil
 }

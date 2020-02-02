@@ -1,4 +1,4 @@
-package main
+package copy
 
 import (
 	"fmt"
@@ -60,12 +60,10 @@ func testHelper() (*os.File, *os.File, func()) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	// defer os.Remove(file1.Name())
 	file2, err := ioutil.TempFile("", "test")
 	if err != nil {
 		fmt.Println(err)
 	}
-	// defer os.Remove(file2.Name())
 	file1D, err := os.Create(file1.Name())
 	if err != nil {
 		fmt.Println(err)
@@ -79,11 +77,13 @@ func testHelper() (*os.File, *os.File, func()) {
 }
 
 func TestBaseCopy(t *testing.T) {
-	for _, aCase := range TestCases {
-		file1, file2, cleanup := testHelper()
-		defer cleanup()
-		Copy(aCase.offset, aCase.limit, file1.Name(), file2.Name(), aCase.custom)
-		file2Data, _ := ioutil.ReadFile(file2.Name())
-		require.Equal(t, aCase.answer, string(file2Data))
+	for i, aCase := range TestCases {
+		t.Run(fmt.Sprintf("test %d", i), func(t *testing.T) {
+			file1, file2, cleanup := testHelper()
+			defer cleanup()
+			Copy(aCase.offset, aCase.limit, file1.Name(), file2.Name(), aCase.custom)
+			file2Data, _ := ioutil.ReadFile(file2.Name())
+			require.Equal(t, aCase.answer, string(file2Data))
+		})
 	}
 }
