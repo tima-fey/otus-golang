@@ -1,4 +1,4 @@
-package main
+package envdir
 
 import (
 	"bufio"
@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 	"syscall"
 )
 
@@ -17,11 +18,13 @@ func ReadDir(dir string) (map[string]string, error) {
 	}
 	answer := make(map[string]string)
 	for _, fileInfo := range files {
-		fmt.Println(fileInfo.Name())
 		file, err := os.Open(dir + "/" + fileInfo.Name())
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
+		}
+		if strings.Contains(file.Name(), "=") {
+			continue
 		}
 		scanner := bufio.NewScanner(file)
 		scanner.Split(bufio.ScanLines)
@@ -30,7 +33,10 @@ func ReadDir(dir string) (map[string]string, error) {
 			txtlines = append(txtlines, scanner.Text())
 		}
 		if len(txtlines) > 0 {
-			answer[fileInfo.Name()] = txtlines[0]
+			if strings.Contains(txtlines[0], "=") {
+				continue
+			}
+			answer[fileInfo.Name()] = strings.TrimSpace(txtlines[0])
 		} else {
 			answer[fileInfo.Name()] = ""
 		}
@@ -59,22 +65,11 @@ func RunCmd(cmd []string, env map[string]string) int {
 	return 0
 }
 
-func envdir(dir string, cmd []string) (int, error) {
+func Envdir(dir string, cmd []string) (int, error) {
 	envs, err := ReadDir(dir)
 	if err != nil {
 		return 0, err
 	}
 	exitCode := RunCmd(cmd, envs)
 	return exitCode, nil
-}
-func main() {
-	if len(os.Args) < 3 {
-		fmt.Println("Error. Specify env dir and command to execute")
-		os.Exit(1)
-	}
-	exitCode, err := envdir(os.Args[1], os.Args[2:])
-	if err != nil {
-		fmt.Println(err)
-	}
-	os.Exit(exitCode)
 }
