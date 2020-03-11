@@ -32,12 +32,15 @@ func (c calendarpb) Get(ctx context.Context, id *scheme.EventId) (*scheme.Event,
 	return &scheme.Event{Name: event.Name, Id: event.EventID, StarTtime: startTime, EndTime: endTime}, err
 }
 func (c calendarpb) Update(ctx context.Context, e *scheme.Event) (*scheme.Event, error) {
+	startDate, _ := ptypes.Timestamp(e.StarTtime)
+	endDate, _ := ptypes.Timestamp(e.EndTime)
+	err := c.Events.ReplaceEvent(e.Id, events.Event{Name: e.Name, StartDate: startDate, EndDate: endDate})
 	fmt.Println(e)
-	return &scheme.Event{Id: 1}, nil
+	return e, err
 }
 func (c calendarpb) Delete(ctx context.Context, id *scheme.EventId) (*scheme.EventId, error) {
-	fmt.Println(id)
-	return id, nil
+	err := c.Events.RemoveEvent(id.Id)
+	return &scheme.EventId{Id: id.Id}, err
 }
 func main() {
 

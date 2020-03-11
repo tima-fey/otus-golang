@@ -22,7 +22,17 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 400*time.Millisecond)
 	defer cancel()
 
-	_, _ = c.Add(ctx, &scheme.Event{Name: "test", StarTtime: ptypes.TimestampNow(), EndTime: ptypes.TimestampNow()})
-	answer_to_print, _ := c.Get(ctx, &scheme.EventId{Id: 0})
-	fmt.Println(answer_to_print)
+	answer1, _ := c.Add(ctx, &scheme.Event{Name: "test", StarTtime: ptypes.TimestampNow(), EndTime: ptypes.TimestampNow()})
+	fmt.Println(answer1)
+
+	answer2, _ := c.Get(ctx, &scheme.EventId{Id: 0})
+	fmt.Println(answer2)
+	answer3, _ := c.Update(ctx, &scheme.Event{Name: "tost", Id: 0, StarTtime: ptypes.TimestampNow(), EndTime: ptypes.TimestampNow()})
+	fmt.Println(answer3)
+	answer2, _ = c.Get(ctx, &scheme.EventId{Id: 0})
+	fmt.Println(answer2)
+	answer4, _ := c.Delete(ctx, &scheme.EventId{Id: 0})
+	fmt.Println(answer4)
+	answer2, _ = c.Get(ctx, &scheme.EventId{Id: 0})
+	fmt.Println(answer2)
 }
