@@ -11,7 +11,7 @@ import (
 func main() {
 	storage := new(local_storage.LocalStorage)
 	storage.NextID = 0
-	storage.Events = make(map[int]events.Event)
+	storage.Events = make(map[int32]events.Event)
 	usersCalendar := calendar.Calendar{
 		Events: storage,
 		User:   "test_user",
@@ -20,4 +20,5 @@ func main() {
 	usersCalendar.Events.AddEvent(testEvent)
 	eventFromCalendar, _ := usersCalendar.Events.GetEvent(0)
 	fmt.Println(eventFromCalendar.Name)
+
 }

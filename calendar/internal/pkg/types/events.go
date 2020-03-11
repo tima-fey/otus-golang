@@ -4,7 +4,7 @@ import "time"
 
 type Event struct {
 	Name      string
-	EventID   int
+	EventID   int32
 	StartDate time.Time
 	EndDate   time.Time
 }

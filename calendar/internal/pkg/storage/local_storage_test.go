@@ -12,7 +12,7 @@ import (
 func TestAddEvent(t *testing.T) {
 	storage := new(LocalStorage)
 	storage.NextID = 0
-	storage.Events = make(map[int]events.Event)
+	storage.Events = make(map[int32]events.Event)
 	startTime := time.Date(2009, time.November, 10, 10, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	testEvent := events.Event{Name: "test_name", StartDate: startTime, EndDate: endTime}
@@ -29,7 +29,7 @@ func TestAddEvent(t *testing.T) {
 func TestRemoveEvent(t *testing.T) {
 	storage := new(LocalStorage)
 	storage.NextID = 0
-	storage.Events = make(map[int]events.Event)
+	storage.Events = make(map[int32]events.Event)
 	startTime := time.Date(2009, time.November, 10, 22, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	testEvent := events.Event{Name: "test_name", StartDate: startTime, EndDate: endTime}
@@ -44,7 +44,7 @@ func TestRemoveEvent(t *testing.T) {
 func TestReplaceEvent(t *testing.T) {
 	storage := new(LocalStorage)
 	storage.NextID = 0
-	storage.Events = make(map[int]events.Event)
+	storage.Events = make(map[int32]events.Event)
 	startTime := time.Date(2009, time.November, 10, 12, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	testEvent := events.Event{Name: "test_name", StartDate: startTime, EndDate: endTime}
@@ -70,7 +70,7 @@ func TestReplaceEvent(t *testing.T) {
 func TestIsFree(t *testing.T) {
 	storage := new(LocalStorage)
 	storage.NextID = 0
-	storage.Events = make(map[int]events.Event)
+	storage.Events = make(map[int32]events.Event)
 	startTime := time.Date(2009, time.November, 10, 12, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	testEvent := events.Event{Name: "test_name", StartDate: startTime, EndDate: endTime}
@@ -99,7 +99,7 @@ func TestIsFree(t *testing.T) {
 func TestEventList(t *testing.T) {
 	storage := new(LocalStorage)
 	storage.NextID = 0
-	storage.Events = make(map[int]events.Event)
+	storage.Events = make(map[int32]events.Event)
 	startTime := time.Date(2009, time.November, 10, 12, 0, 0, 0, time.UTC)
 	endTime := time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC)
 	testEvent := events.Event{Name: "test_name", StartDate: startTime, EndDate: endTime}

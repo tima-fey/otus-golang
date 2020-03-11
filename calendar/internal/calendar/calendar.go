@@ -12,10 +12,10 @@ type Calendar struct {
 	UserID int
 }
 type Storage interface {
-	AddEvent(e events.Event) (int, error)
-	RemoveEvent(eventID int) error
-	ReplaceEvent(eventID int, e events.Event) error
-	EventList() map[int]events.Event
+	AddEvent(e events.Event) (int32, error)
+	RemoveEvent(eventID int32) error
+	ReplaceEvent(eventID int32, e events.Event) error
+	EventList() map[int32]events.Event
 	IsFree(start, end time.Time) bool
-	GetEvent(eventID int) (events.Event, error)
+	GetEvent(eventID int32) (events.Event, error)
 }

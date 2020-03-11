@@ -15,7 +15,7 @@ func TestCalendar(t *testing.T) {
 	// }
 	storage := new(local_storage.LocalStorage)
 	storage.NextID = 0
-	storage.Events = make(map[int]events.Event)
+	storage.Events = make(map[int32]events.Event)
 	usersCalendar := Calendar{
 		Events: storage,
 		User:   "test_user",
