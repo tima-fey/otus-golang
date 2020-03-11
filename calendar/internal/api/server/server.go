@@ -9,6 +9,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/tima-fey/otus-golang/calendar/internal/api/scheme"
 	"github.com/tima-fey/otus-golang/calendar/internal/calendar"
+	local_storage "github.com/tima-fey/otus-golang/calendar/internal/pkg/storage"
 	events "github.com/tima-fey/otus-golang/calendar/internal/pkg/types"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -47,7 +48,9 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 	reflection.Register(grpcServer)
-
-	scheme.RegisterEventsHandlerServer(grpcServer, &calendarpb{})
+	storage := new(local_storage.LocalStorage)
+	storage.NextID = 0
+	storage.Events = make(map[int32]events.Event)
+	scheme.RegisterEventsHandlerServer(grpcServer, &calendarpb{Events: storage})
 	grpcServer.Serve(lis)
 }

@@ -22,6 +22,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 400*time.Millisecond)
 	defer cancel()
 
-	answer, _ := c.Add(ctx, &scheme.Event{Id: 1, Name: "test", StarTtime: ptypes.TimestampNow(), EndTime: ptypes.TimestampNow()})
-	fmt.Println(answer)
+	_, _ = c.Add(ctx, &scheme.Event{Name: "test", StarTtime: ptypes.TimestampNow(), EndTime: ptypes.TimestampNow()})
+	answer_to_print, _ := c.Get(ctx, &scheme.EventId{Id: 0})
+	fmt.Println(answer_to_print)
 }
