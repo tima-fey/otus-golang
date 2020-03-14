@@ -1,6 +1,0 @@
-{
-    "address": "localhost",
-    "port": 8081,
-    "log_file": "server.log",
-    "log_level": "debug"
-}

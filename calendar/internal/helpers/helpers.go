@@ -9,7 +9,8 @@ import (
 
 type Config struct {
 	Address  string `json:"address"`
-	Port     int    `json:"port"`
+	WebPort  int    `json:"web_port"`
+	GrpcPort int    `json:"grpc_port"`
 	LogFile  string `json:"log_file"`
 	LogLevel string `json:"log_level"`
 }
@@ -38,7 +39,7 @@ func checkPort(port int) {
 
 func GetConfig() Config {
 	var config string
-	flag.StringVar(&config, "config", "", "osource file")
+	flag.StringVar(&config, "config", "", "soource file")
 	flag.Parse()
 	file, err := ioutil.ReadFile(config)
 	if err != nil {
@@ -50,6 +51,8 @@ func GetConfig() Config {
 		log.Fatal(err)
 	}
 	checkLogLvl(data.LogLevel)
-	checkPort(data.Port)
+	checkPort(data.WebPort)
+	checkPort(data.GrpcPort)
+
 	return data
 }
